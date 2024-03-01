@@ -1,13 +1,17 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package Lab7P2_JafetHou;
 
-/**
- *
- * @author zenot
- */
+import java.io.File;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.swing.table.DefaultTableModel;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
+
 public class InterfazSupermercado extends javax.swing.JFrame {
 
     /**
@@ -16,8 +20,9 @@ public class InterfazSupermercado extends javax.swing.JFrame {
     public InterfazSupermercado() {
         initComponents();
         this.setLocationRelativeTo(null);
+        model = (DefaultTableModel)this.jtable_Inventario.getModel();
     }
-
+DefaultTableModel model;
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,6 +32,11 @@ public class InterfazSupermercado extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jpp_table = new javax.swing.JPopupMenu();
+        jmi_ClearTable = new javax.swing.JMenuItem();
+        jpp_Arbol = new javax.swing.JPopupMenu();
+        jmi_LoadFile = new javax.swing.JMenuItem();
+        jmi_RefreshTree = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jt_Comandos = new javax.swing.JTextField();
         jb_enter = new javax.swing.JButton();
@@ -46,6 +56,20 @@ public class InterfazSupermercado extends javax.swing.JFrame {
         jmi_Structure = new javax.swing.JMenuItem();
         jmi_Commands = new javax.swing.JMenuItem();
 
+        jmi_ClearTable.setText("Clear Table");
+        jmi_ClearTable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_ClearTableActionPerformed(evt);
+            }
+        });
+        jpp_table.add(jmi_ClearTable);
+
+        jmi_LoadFile.setText("Load File");
+        jpp_Arbol.add(jmi_LoadFile);
+
+        jmi_RefreshTree.setText("Refresh Tree");
+        jpp_Arbol.add(jmi_RefreshTree);
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 153));
@@ -58,6 +82,11 @@ public class InterfazSupermercado extends javax.swing.JFrame {
         jb_enter.setBackground(new java.awt.Color(255, 255, 255));
         jb_enter.setForeground(new java.awt.Color(0, 0, 0));
         jb_enter.setText("Enter");
+        jb_enter.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jb_enterMouseClicked(evt);
+            }
+        });
         jPanel1.add(jb_enter, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 10, 120, 30));
 
         jtree_Archivos.setBackground(new java.awt.Color(255, 255, 255));
@@ -106,6 +135,14 @@ public class InterfazSupermercado extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        jtable_Inventario.setSelectionBackground(new java.awt.Color(255, 0, 153));
+        jtable_Inventario.setShowGrid(true);
+        jtable_Inventario.setShowVerticalLines(false);
+        jtable_Inventario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtable_InventarioMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jtable_Inventario);
 
         jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 60, 440, 370));
@@ -113,6 +150,11 @@ public class InterfazSupermercado extends javax.swing.JFrame {
         jMenu1.setText("File");
 
         jmi_NewFile.setText("New File");
+        jmi_NewFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_NewFileActionPerformed(evt);
+            }
+        });
         jMenu1.add(jmi_NewFile);
 
         jmi_ImportFile.setText("Import File");
@@ -123,9 +165,19 @@ public class InterfazSupermercado extends javax.swing.JFrame {
         jMenu3.setText("Windows");
 
         jmi_ClearLine.setText("Clear Command Line");
+        jmi_ClearLine.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_ClearLineActionPerformed(evt);
+            }
+        });
         jMenu3.add(jmi_ClearLine);
 
         jmi_Clear.setText("Clear Table");
+        jmi_Clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_ClearActionPerformed(evt);
+            }
+        });
         jMenu3.add(jmi_Clear);
 
         jmi_Refresh.setText("Refresh Trees");
@@ -139,6 +191,11 @@ public class InterfazSupermercado extends javax.swing.JFrame {
         jMenu2.add(jmi_Structure);
 
         jmi_Commands.setText("Commands");
+        jmi_Commands.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_CommandsActionPerformed(evt);
+            }
+        });
         jMenu2.add(jmi_Commands);
 
         jMenuBar1.add(jMenu2);
@@ -158,6 +215,132 @@ public class InterfazSupermercado extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jmi_ClearLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_ClearLineActionPerformed
+        jt_Comandos.setText("");
+    }//GEN-LAST:event_jmi_ClearLineActionPerformed
+
+    private void jb_enterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jb_enterMouseClicked
+        
+        boolean comand = true;
+        Pattern loat = Pattern.compile("^./load [a-zA-Z]{0,10}.txt$");
+        Matcher texto = loat.matcher(jt_Comandos.getText());
+        
+        if(texto.matches()){
+            
+            
+            comand = false;
+            
+        }
+        
+        Pattern creat = Pattern.compile("^./create [a-zA-Z]{0,10}.txt -single$");
+        Matcher text = creat.matcher(jt_Comandos.getText());
+        
+        if(text.matches()){
+            CrearArchivo();
+            
+            comand = false;
+        }
+        
+        if(comand == true){
+            
+            if(jt_Comandos.getText().contentEquals("./clear")){
+
+                cleartable();
+                
+            }else if(jt_Comandos.getText().contentEquals("./refresh")){
+
+            }else{
+
+                JOptionPane.showMessageDialog(this, "Commando Invalido");
+
+            }
+        }    
+    }//GEN-LAST:event_jb_enterMouseClicked
+
+    public void CrearArchivo(){
+        
+        Inventario inv = new Inventario();
+        
+        Pattern creat = Pattern.compile("^./create [a-zA-Z]{0,10}.txt -single$");
+        Matcher text = creat.matcher(jt_Comandos.getText());
+        
+        if(text.matches()){
+        
+            String nom[] = jt_Comandos.getText().split(" ");
+        
+            try {
+                
+                File archivo = new File("./Archivos/"+nom[1]);
+                
+                FileWriter fw;
+                PrintWriter pw;
+                fw = new FileWriter("./Archivos/"+nom[1], true);
+                for (int i = 0; i < this.jtable_Inventario.getRowCount(); i++) {
+                    fw.write(model.getValueAt(i, 0).toString()+",");
+                    fw.write(model.getValueAt(i, 1).toString()+",");
+                    fw.write(model.getValueAt(i, 2).toString()+",");
+                    fw.write(model.getValueAt(i,3).toString()+",");
+                    fw.write(model.getValueAt(i, 4).toString()+",");
+                    fw.write(model.getValueAt(i, 5).toString()+",");
+                }
+                fw.close();
+                /*pw = new PrintWriter(fw);
+                pw.print(inv.getId()+","+
+                        inv.getNombre()+","+
+                        inv.getCategoria()+","+
+                        inv.getPrice()+","+
+                        inv.getAisle()+","+
+                        inv.getBin()+",\n");
+                pw.close();*/
+                
+                if(archivo.createNewFile()){
+                    JOptionPane.showMessageDialog(this, "Archivo "+nom+ "creado exitosamente");
+                }
+
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Archivo no creado");
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "Ingrese commando correcto para continuar");
+        }
+        
+    }
+    public void load(){
+    
+    }
+    
+    public void cleartable(){
+        
+        jtable_Inventario.setModel(new DefaultTableModel(new String[]{"Id","Nombre","Categoria","Precio","Aisle","Bin"}, 21));
+    }
+    
+    private void jmi_CommandsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_CommandsActionPerformed
+        JOptionPane.showMessageDialog(this, "Lista de Commandos: \n"
+                + "Para cargar la tabla: ./load data.txt\n"
+                + "Para la creación de archivos: ./create archivo.txt -single\n"
+                + "Para limpiar la tabla: ./clear\n"
+                + "Para cargar los árboles: ./refresh");
+    }//GEN-LAST:event_jmi_CommandsActionPerformed
+
+    private void jmi_ClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_ClearActionPerformed
+
+        cleartable();
+    }//GEN-LAST:event_jmi_ClearActionPerformed
+
+    private void jmi_NewFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_NewFileActionPerformed
+        CrearArchivo();
+    }//GEN-LAST:event_jmi_NewFileActionPerformed
+
+    private void jtable_InventarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtable_InventarioMouseClicked
+        if(evt.isMetaDown()){
+            jpp_table.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_jtable_InventarioMouseClicked
+
+    private void jmi_ClearTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_ClearTableActionPerformed
+        cleartable();
+    }//GEN-LAST:event_jmi_ClearTableActionPerformed
 
     /**
      * @param args the command line arguments
@@ -205,11 +388,16 @@ public class InterfazSupermercado extends javax.swing.JFrame {
     private javax.swing.JButton jb_enter;
     private javax.swing.JMenuItem jmi_Clear;
     private javax.swing.JMenuItem jmi_ClearLine;
+    private javax.swing.JMenuItem jmi_ClearTable;
     private javax.swing.JMenuItem jmi_Commands;
     private javax.swing.JMenuItem jmi_ImportFile;
+    private javax.swing.JMenuItem jmi_LoadFile;
     private javax.swing.JMenuItem jmi_NewFile;
     private javax.swing.JMenuItem jmi_Refresh;
+    private javax.swing.JMenuItem jmi_RefreshTree;
     private javax.swing.JMenuItem jmi_Structure;
+    private javax.swing.JPopupMenu jpp_Arbol;
+    private javax.swing.JPopupMenu jpp_table;
     private javax.swing.JTextField jt_Comandos;
     private javax.swing.JTable jtable_Inventario;
     private javax.swing.JTree jtree_Archivos;
