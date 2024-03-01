@@ -263,8 +263,6 @@ DefaultTableModel model;
 
     public void CrearArchivo(){
         
-        Inventario inv = new Inventario();
-        
         Pattern creat = Pattern.compile("^./create [a-zA-Z]{0,10}.txt -single$");
         Matcher text = creat.matcher(jt_Comandos.getText());
         
@@ -276,35 +274,33 @@ DefaultTableModel model;
                 
                 File archivo = new File("./Archivos/"+nom[1]);
                 
-                FileWriter fw;
-                
-                fw = new FileWriter("./Archivos/"+nom[1], true);
-                BufferedWriter bw = new BufferedWriter(fw);
-                
-                
-                for (int i = 0; i < this.jtable_Inventario.getRowCount(); i++) {
-                    for (int j = 0; j < jtable_Inventario.getColumnCount(); j++) {
-                        if(model.getValueAt(i, j) != null){
-                            bw.write(model.getValueAt(i, j).toString()+",");
-                        }
-                    }
-                }
-                fw.close();
-                bw.close();
-                /*pw = new PrintWriter(fw);
-                pw.print(inv.getId()+","+
-                        inv.getNombre()+","+
-                        inv.getCategoria()+","+
-                        inv.getPrice()+","+
-                        inv.getAisle()+","+
-                        inv.getBin()+",\n");
-                pw.close();*/
-                
                 if(archivo.createNewFile()){
+                    FileWriter fw;
+                
+                    fw = new FileWriter(archivo);
+                    BufferedWriter bw = new BufferedWriter(fw);
+
+
+                    for (int i = 0; i < this.jtable_Inventario.getRowCount(); i++) {
+                        for (int j = 0; j < jtable_Inventario.getColumnCount(); j++) {
+                            
+                            if(jtable_Inventario.getValueAt(i, j) != null){
+                                
+                                bw.write(jtable_Inventario.getValueAt(i, j).toString()+",");
+                                
+                            }
+                        }
+                        bw.newLine();
+                    }
+                    
+                    bw.close();
+                    fw.close();
+                    
                     JOptionPane.showMessageDialog(this, "Archivo "+nom+ "creado exitosamente");
                 }
 
             } catch (IOException e) {
+                e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Archivo no creado");
             }
         }else{
@@ -320,15 +316,15 @@ DefaultTableModel model;
             
             String nom[] = jt_Comandos.getText().split(" ");
             
-            File file = new File("./Archivos"+nom[1]);
-            
+            File file = new File("./Archivos/"+nom[1]);
+            System.out.println("./Archivos/"+nom[1]);
             try {
                 FileReader fr = new FileReader(file);
                 BufferedReader br = new BufferedReader(fr);
                 Object[] lines = br.lines().toArray();
                 
                 for (int i = 0; i < lines.length; i++) {
-                    String[] row = lines[i].toString().split(" ");
+                    String[] row = lines[i].toString().split(",");
                     model.addRow(row);
                 }
                 
