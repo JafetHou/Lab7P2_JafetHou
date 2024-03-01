@@ -1,7 +1,10 @@
 
 package Lab7P2_JafetHou;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.IOException;
@@ -228,7 +231,7 @@ DefaultTableModel model;
         
         if(texto.matches()){
             
-            
+            load();
             comand = false;
             
         }
@@ -274,17 +277,20 @@ DefaultTableModel model;
                 File archivo = new File("./Archivos/"+nom[1]);
                 
                 FileWriter fw;
-                PrintWriter pw;
+                
                 fw = new FileWriter("./Archivos/"+nom[1], true);
+                BufferedWriter bw = new BufferedWriter(fw);
+                
+                
                 for (int i = 0; i < this.jtable_Inventario.getRowCount(); i++) {
-                    fw.write(model.getValueAt(i, 0).toString()+",");
-                    fw.write(model.getValueAt(i, 1).toString()+",");
-                    fw.write(model.getValueAt(i, 2).toString()+",");
-                    fw.write(model.getValueAt(i,3).toString()+",");
-                    fw.write(model.getValueAt(i, 4).toString()+",");
-                    fw.write(model.getValueAt(i, 5).toString()+",");
+                    for (int j = 0; j < jtable_Inventario.getColumnCount(); j++) {
+                        if(model.getValueAt(i, j) != null){
+                            bw.write(model.getValueAt(i, j).toString()+",");
+                        }
+                    }
                 }
                 fw.close();
+                bw.close();
                 /*pw = new PrintWriter(fw);
                 pw.print(inv.getId()+","+
                         inv.getNombre()+","+
@@ -307,7 +313,30 @@ DefaultTableModel model;
         
     }
     public void load(){
-    
+        Pattern loat = Pattern.compile("^./load [a-zA-Z]{0,10}.txt$");
+        Matcher texto = loat.matcher(jt_Comandos.getText());
+        
+        if(texto.matches()){
+            
+            String nom[] = jt_Comandos.getText().split(" ");
+            
+            File file = new File("./Archivos"+nom[1]);
+            
+            try {
+                FileReader fr = new FileReader(file);
+                BufferedReader br = new BufferedReader(fr);
+                Object[] lines = br.lines().toArray();
+                
+                for (int i = 0; i < lines.length; i++) {
+                    String[] row = lines[i].toString().split(" ");
+                    model.addRow(row);
+                }
+                
+            } catch (FileNotFoundException ex) {
+            
+            }
+        }    
+        
     }
     
     public void cleartable(){
