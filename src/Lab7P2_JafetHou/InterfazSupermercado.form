@@ -28,6 +28,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Load File"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmi_LoadFileActionPerformed"/>
+          </Events>
         </MenuItem>
         <MenuItem class="javax.swing.JMenuItem" name="jmi_RefreshTree">
           <Properties>
@@ -89,6 +92,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Refresh Trees"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmi_RefreshActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>

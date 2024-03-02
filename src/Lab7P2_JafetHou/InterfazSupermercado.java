@@ -14,6 +14,8 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 
 public class InterfazSupermercado extends javax.swing.JFrame {
 
@@ -68,6 +70,11 @@ DefaultTableModel model;
         jpp_table.add(jmi_ClearTable);
 
         jmi_LoadFile.setText("Load File");
+        jmi_LoadFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_LoadFileActionPerformed(evt);
+            }
+        });
         jpp_Arbol.add(jmi_LoadFile);
 
         jmi_RefreshTree.setText("Refresh Tree");
@@ -191,6 +198,11 @@ DefaultTableModel model;
         jMenu3.add(jmi_Clear);
 
         jmi_Refresh.setText("Refresh Trees");
+        jmi_Refresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_RefreshActionPerformed(evt);
+            }
+        });
         jMenu3.add(jmi_Refresh);
 
         jMenuBar1.add(jMenu3);
@@ -264,7 +276,9 @@ DefaultTableModel model;
                 cleartable();
                 
             }else if(jt_Comandos.getText().contentEquals("./refresh")){
-
+                
+                refresh();
+                
             }else{
 
                 JOptionPane.showMessageDialog(this, "Commando Invalido");
@@ -342,12 +356,27 @@ DefaultTableModel model;
                 }
                 
             } catch (FileNotFoundException ex) {
-            
+                JOptionPane.showMessageDialog(this, "Error en agregar table");
             }
         }else{
             JOptionPane.showMessageDialog(this, "Ingrese el commando correcto");
         }    
         
+    }
+    public void refresh(){
+        DefaultTreeModel modtree = (DefaultTreeModel)jtree_Archivos.getModel();
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) modtree.getRoot();
+        
+        File file = new File("./Archivos/");
+        File[] Archivo = file.listFiles();
+        
+        for (int i = 0; i < Archivo.length; i++) {
+            
+            if(Archivo[i].getName().contains(".txt")){
+                DefaultMutableTreeNode refresh = new DefaultMutableTreeNode((File) Archivo[i]);
+                root.add(refresh);
+            }
+        }
     }
     
     public void cleartable(){
@@ -388,7 +417,7 @@ DefaultTableModel model;
     }//GEN-LAST:event_jtree_ArchivosMouseClicked
 
     private void jmi_RefreshTreeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_RefreshTreeActionPerformed
-        
+        refresh();
     }//GEN-LAST:event_jmi_RefreshTreeActionPerformed
 
     private void jmi_ImportFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_ImportFileActionPerformed
@@ -399,6 +428,14 @@ DefaultTableModel model;
         JOptionPane.showMessageDialog(this, "Ingrese los productos por el siguiente orden:\n"
                 + "(Int) ID, (String) Nombre, (Int) Categoria, (Double) Precio, (Int) Aisle, (Int) BIN");
     }//GEN-LAST:event_jmi_StructureActionPerformed
+
+    private void jmi_RefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_RefreshActionPerformed
+        refresh();
+    }//GEN-LAST:event_jmi_RefreshActionPerformed
+
+    private void jmi_LoadFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_LoadFileActionPerformed
+        load();
+    }//GEN-LAST:event_jmi_LoadFileActionPerformed
     
     /**
      * @param args the command line arguments
