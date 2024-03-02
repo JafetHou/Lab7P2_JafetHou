@@ -71,6 +71,11 @@ DefaultTableModel model;
         jpp_Arbol.add(jmi_LoadFile);
 
         jmi_RefreshTree.setText("Refresh Tree");
+        jmi_RefreshTree.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_RefreshTreeActionPerformed(evt);
+            }
+        });
         jpp_Arbol.add(jmi_RefreshTree);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -96,6 +101,11 @@ DefaultTableModel model;
         jtree_Archivos.setForeground(new java.awt.Color(0, 0, 0));
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("CSVs");
         jtree_Archivos.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jtree_Archivos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtree_ArchivosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jtree_Archivos);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 62, 160, 370));
@@ -129,15 +139,7 @@ DefaultTableModel model;
             new String [] {
                 "Id", "Nombre", "Categoria", "Precio", "Aisle", "Bin"
             }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.Double.class, java.lang.Integer.class, java.lang.Integer.class
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-        });
+        ));
         jtable_Inventario.setSelectionBackground(new java.awt.Color(255, 0, 153));
         jtable_Inventario.setShowGrid(true);
         jtable_Inventario.setShowVerticalLines(false);
@@ -161,6 +163,11 @@ DefaultTableModel model;
         jMenu1.add(jmi_NewFile);
 
         jmi_ImportFile.setText("Import File");
+        jmi_ImportFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_ImportFileActionPerformed(evt);
+            }
+        });
         jMenu1.add(jmi_ImportFile);
 
         jMenuBar1.add(jMenu1);
@@ -191,6 +198,11 @@ DefaultTableModel model;
         jMenu2.setText("Help");
 
         jmi_Structure.setText("Product Structure");
+        jmi_Structure.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmi_StructureActionPerformed(evt);
+            }
+        });
         jMenu2.add(jmi_Structure);
 
         jmi_Commands.setText("Commands");
@@ -317,12 +329,13 @@ DefaultTableModel model;
             String nom[] = jt_Comandos.getText().split(" ");
             
             File file = new File("./Archivos/"+nom[1]);
-            System.out.println("./Archivos/"+nom[1]);
+
             try {
                 FileReader fr = new FileReader(file);
                 BufferedReader br = new BufferedReader(fr);
                 Object[] lines = br.lines().toArray();
                 
+                model.setRowCount(0);
                 for (int i = 0; i < lines.length; i++) {
                     String[] row = lines[i].toString().split(",");
                     model.addRow(row);
@@ -331,6 +344,8 @@ DefaultTableModel model;
             } catch (FileNotFoundException ex) {
             
             }
+        }else{
+            JOptionPane.showMessageDialog(this, "Ingrese el commando correcto");
         }    
         
     }
@@ -349,7 +364,6 @@ DefaultTableModel model;
     }//GEN-LAST:event_jmi_CommandsActionPerformed
 
     private void jmi_ClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_ClearActionPerformed
-
         cleartable();
     }//GEN-LAST:event_jmi_ClearActionPerformed
 
@@ -367,6 +381,25 @@ DefaultTableModel model;
         cleartable();
     }//GEN-LAST:event_jmi_ClearTableActionPerformed
 
+    private void jtree_ArchivosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtree_ArchivosMouseClicked
+        if(evt.isMetaDown()){
+            jpp_Arbol.show(evt.getComponent(), evt.getX(), evt.getY());
+        }
+    }//GEN-LAST:event_jtree_ArchivosMouseClicked
+
+    private void jmi_RefreshTreeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_RefreshTreeActionPerformed
+        
+    }//GEN-LAST:event_jmi_RefreshTreeActionPerformed
+
+    private void jmi_ImportFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_ImportFileActionPerformed
+        load();
+    }//GEN-LAST:event_jmi_ImportFileActionPerformed
+
+    private void jmi_StructureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmi_StructureActionPerformed
+        JOptionPane.showMessageDialog(this, "Ingrese los productos por el siguiente orden:\n"
+                + "(Int) ID, (String) Nombre, (Int) Categoria, (Double) Precio, (Int) Aisle, (Int) BIN");
+    }//GEN-LAST:event_jmi_StructureActionPerformed
+    
     /**
      * @param args the command line arguments
      */
